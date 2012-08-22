@@ -8,17 +8,17 @@ process and integrating your docs into an existing site is a breeze.
 
 1) Comment your javascript source:
 
-   /**
-    *
-    * I'm a Header
-    * ============
-    *
-    * 1) And
-    * 2) I'm
-    * 3) A
-    * 4) List
-    *
-    */
+    /**
+     *
+     * I'm a Header
+     * ============
+     *
+     * 1) And
+     * 2) I'm
+     * 3) A
+     * 4) List
+     *
+     */
 
 2) Include docs.js in the page where you'd like to display your docs markup:
 
