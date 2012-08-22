@@ -2,9 +2,52 @@
  *
  * # Docs.js
  *
+ * Docs.js makes javascript code documentation easy and friendly. Comment your code using Markdown syntax and
+ * docs.js will automagically generate beautiful docs in realtime. No tools to install, no convoluted build
+ * process and integrating your docs into an existing site is a breeze.
+ *
  * ## Usage:
  * 
- * ---------
+ * 1) Comment your javascript source:
+ *
+ *   <pre>
+ *   /**
+ *    *
+ *    * I'm a Header
+ *    * ============
+ *    *
+ *    * 1) And
+ *    * 2) I'm
+ *    * 3) A
+ *    * 4) List
+ *    *
+ *    &#0042;/</pre>
+ *
+ * 2) Include docs.js in the page where you'd like to display your docs markup:
+ * 
+ *     <script type="text/javascript" src="docs.js"></script>
+ *
+ * 3) Either call docs.js with a reference to the element where you'd like
+ *    your docs markup to be displayed:
+ *
+ *     <div id="docs"></div>
+ *
+ *     <script type="text/javascript">
+ *       new docs("your.js", document.getElementById("docs")).generate();
+ *     </script>`
+ * 
+ * 4) Or just place the script tag inside the target element and let 'er rip:
+ *
+ *     <div id="docs">
+ *       <script type="text/javascript">
+ *         new docs("your.js").generate();
+ *       </script>
+ *     </div>
+ *
+ * ## TODO:
+ *
+ * * Write proper example CSS
+ * * Some way to generate a sidebar with links to individual sections?
  * 
  */
 
@@ -13,28 +56,51 @@ var docs = function(url, el){
 	// Get all currently loaded scripts. If we're doing dynamic insertion, the script tag calling this should be the last one in the stack
 	var scripts = document.getElementsByTagName("script");
 	
+	// Save a reference to the URL
+	this.url = url;
+	
+	// Properties to store generated markdown / markup
+	this.markdown = "";
+	this.markup = "";
+	
 	// Set the target element for docs output. Either the specified element, or the parent of the script tag calling this
-	var target = (el && typeof el == "object") ? el : scripts[scripts.length - 1].parentNode;
-	
-	// Fetch, parse and output
-	
-	var scope = this;
-	
-	this.fetch(url, function(data){
-	
-		target.innerHTML = scope.parse(data);
-	
-	});
+	this.target = (el && typeof el == "object") ? el : scripts[scripts.length - 1].parentNode;
 
 }
 
 /**
  *
  * ## Methods:
- * 
- * -----------
  *
  */
+ 
+/**
+ *
+ * ### Generate
+ *
+ * Initiates fetching of source code and generation of docs.
+ *
+ * > ### Parameters
+ *
+ * >> None
+ *
+ * > ### Returns
+ *
+ * >> Nothing
+ *
+ */
+ 
+ docs.prototype.generate = function(){
+ 	
+ 	var scope = this;
+ 	
+ 	this.fetch(this.url, function(markup){
+		
+		scope.target.innerHTML = scope.parse(markup);
+	
+	});
+ 
+ }
 
 /**
  *
@@ -43,18 +109,18 @@ var docs = function(url, el){
  * Retrieves the document at the specified URL using a cross-platform AJAX call and returns
  * the contents to *callback*.
  *
- * > #### Parameters
+ * > ### Parameters
  *
- * >> ##### url (*string*)
+ * >> #### **url** (string)
  * >> The URL to be fetched.
- 
- * >> ##### callback (*function*)
+ *
+ * >> #### **callback** (function)
  * >> The function to be called after a successful fetch. Content will be 
  * >> passed as the first parameter.
  *
- * > #### Returns
+ * > ### Returns
  *
- * >> Nothing.
+ * >> Nothing
  *
  */
 
@@ -71,29 +137,54 @@ docs.prototype.fetch = function(url, callback){
 
 }
 
+/**
+ *
+ * ### Parse
+ *
+ * Parses comments out of source code and runs them through Showdown to generate docs markup.
+ *
+ * > ### Parameters
+ *
+ * >> #### **data** (string)
+ * >> The source code to be parsed.
+ *
+ * > ### Returns
+ *
+ * >> #### **String**
+ * >> A string containing the generated markup.
+ *
+ */
+
 docs.prototype.parse = function(data){
 	
-	var markup = "";
+	this.markup = "";
+	this.markdown = "";
+	
 	var comments = data.match(/(^|\n\s*)\/\*+[^]*?\*\//g); // Parse out all self-contained comments of format /* comment */
+	
+	this.sidebar = [];
 	
 	for(var c in comments){
 	
-		comments[c] = comments[c].replace(/^\s+/, ""); 		// Trim whitespace from start
-		comments[c] = comments[c].replace(/\r\n|\r/, "\n"); // Convert spaces
-		comments[c] = comments[c].replace(/^\s+/gm, ""); 	// Trim whitespace from beginning of each line
-		comments[c] = comments[c].replace(/^\/\*+/g, ""); 	// Trim comment open
-		comments[c] = comments[c].replace(/\*+\/$/g, ""); 	// Trim comment close
-		comments[c] = comments[c].replace(/^\*\s/gm, "");	// Trim asterixes at beggining of lines
+		comments[c] = comments[c].replace(/^\s+/, ""); 				// Trim whitespace from start
+		comments[c] = comments[c].replace(/\r\n|\r/, "\n"); 		// Convert spaces
+		comments[c] = comments[c].replace(/^\s+/gm, ""); 			// Trim whitespace from beginning of each line
+		comments[c] = comments[c].replace(/^\/\*+/g, ""); 			// Trim comment open
+		comments[c] = comments[c].replace(/\*+\/$/g, ""); 			// Trim comment close
+		comments[c] = comments[c].replace(/^\*[\ \t]?/gm, "");		// Trim asterixes at begining of lines
 		
-		var markdown = new showdown.converter().makeHtml(comments[c]);
-		
-		markup += markdown;
+		this.markdown += comments[c];
+		this.markup += new showdown.converter().makeHtml(comments[c]);
 	
 	}
 	
-	return markup;
+	return this.markup;
 
 }
+
+//
+// Showdown library by John Fraser. See LICENSE.md for more information.
+//
 
 showdown = {};
 
