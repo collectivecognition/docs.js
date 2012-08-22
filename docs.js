@@ -43,11 +43,6 @@
  *         new docs("your.js").generate();
  *       </script>
  *     </div>
- *
- * ## TODO:
- *
- * * Write proper example CSS
- * * Some way to generate a sidebar with links to individual sections?
  * 
  */
 

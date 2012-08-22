@@ -41,11 +41,6 @@ process and integrating your docs into an existing site is a breeze.
       </script>
     </div>
 
-## TODO:
-
-* Write proper example CSS
-* Some way to generate a sidebar with links to individual sections?
-
 ## Methods:
 
 ### Generate
