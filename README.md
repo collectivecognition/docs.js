@@ -1,12 +1,12 @@
 # Docs.js
 
-Docs.js makes javascript code documentation easy and friendly. Comment your code using Markdown syntax and
+Docs.js makes code documentation easy and friendly. Comment your code using Markdown syntax and
 docs.js will automagically generate beautiful docs in realtime. No tools to install, no convoluted build
 process and integrating your docs into an existing site is a breeze.
 
 ## Usage:
 
-1) Comment your javascript source:
+1) Comment your source:
 
     /**
      *
