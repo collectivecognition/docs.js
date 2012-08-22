@@ -1,7 +1,12 @@
+License
+=======
+
+TODO
+
 Showdown
 ========
 
-*Docs.js uses John Fraser's Showdown, the license for which is included below:*
+## Docs.js uses John Fraser's Showdown, the license for which is included below:*
 
 Copyright (c) 2007, John Fraser  
 <http://www.attacklab.net/>  
@@ -37,3 +42,10 @@ profits; or business interruption) however caused and on any theory of
 liability, whether in contract, strict liability, or tort (including
 negligence or otherwise) arising in any way out of the use of this
 software, even if advised of the possibility of such damage.
+
+Markdown.css
+============
+
+Docs.js also uses Kevin Burke's markdown.css to make the example pretty.
+
+Check it out here: <http://kevinburke.bitbucket.org/markdowncss/>
